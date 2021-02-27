@@ -20,6 +20,7 @@ use App\Http\Controllers\Dev;
 // });
 
 Route::get('/',[Dev\DefaultController::class, 'index'])->name('home');
+Route::post('/pagination-fetch',[Dev\DefaultController::class, 'ajaxPaginateFetch'])->name('pagination.fetch');
 Route::post('/salary-update',[Dev\DefaultController::class, 'salaryUpdate'])->name('update.salary');
 Route::post('/name-update',[Dev\DefaultController::class, 'nameUpdate'])->name('update.name');
 Route::post('/all-update',[Dev\DefaultController::class, 'allUpdate'])->name('update.all');

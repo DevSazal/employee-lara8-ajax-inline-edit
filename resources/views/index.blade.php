@@ -26,47 +26,12 @@
       <h1>Employees</h1>
       <p>You may change data from here.</p>
 
-      <table class="table table-dark table-hover">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Name</th>
-            <th>Designation</th>
-            <th>salary</th>
-          </tr>
-        </thead>
-        <tbody>
+      @csrf
+      <div id="table_data">
 
-          @forelse($employees AS $employee)
-            <tr>
-              <td>{{ $employee->id }}</td>
-              <!-- <td>{{ $employee->name }}</td> -->
-              <td id="empNameTD<?php echo $employee->id ?>" onclick="$('#empName<?php echo $employee->id ?>').show(); $('#empNameTD<?php echo $employee->id ?>').hide()">{{ $employee->name }}</td>
-              <td id="empName<?php echo $employee->id ?>" style="display:none">
-                <input type="text" name="name" id="name{{ $employee->id }}" value="{{ $employee->name }}" onchange="nameAction({{ $employee->id }})" >
-              </td>
-              <td>{{ $employee->designation->title }}</td>
-              <td><input type="number" name="salary" id="salary{{ $employee->id }}" value="{{ $employee->salary }}" onchange="salaryAction({{ $employee->id }})"></td>
-            </tr>
-          @empty
-            <p>No Data Found!</p>
-          @endforelse
+          @include('index_child')
 
-        </tbody>
-      </table>
-
-      {{ $employees->links() }}
-
-      <script type="text/javascript">
-      var x =
-        [
-          @forEach($employees AS $employeeX)
-          '{{ $employeeX->id }}',
-          @endforeach
-        ];
-      </script>
-
-      <br><button type="button" class="btn btn-warning" onclick="updateAction(x)">Update All</button>
+      </div>
 
     </div>
 
@@ -107,7 +72,7 @@
                  success:function(data) {
                     // $("#salary").html(data.msg);
                     // alert("name updated");
-                    document.getElementById('empNameTD'+eid).value = pick;
+                    document.getElementById('empNameTD'+eid).innerHTML = pick;
                     $('#empName'+eid).hide();
                     $('#empNameTD'+eid).show();
 
@@ -144,6 +109,32 @@
         });
     }
 
+    </script>
+    <script>
+        $(document).ready(function(){
+
+         $(document).on('click', '.relative', function(event){
+            event.preventDefault();
+            var page = $(this).attr('href').split('page=')[1];
+            console.log("page="+page);
+            fetch_data(page);
+         });
+
+         function fetch_data(page)
+         {
+          var _token = $("input[name=_token]").val();
+          $.ajax({
+              url:"{{ route('pagination.fetch') }}",
+              method:"POST",
+              data:{_token:_token, page:page},
+              success:function(data)
+              {
+               $('#table_data').html(data);
+              }
+            });
+         }
+
+        });
     </script>
 
   </body>

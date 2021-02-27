@@ -17,6 +17,15 @@ class DefaultController extends Controller
       return view('index')->with($array);
     }
 
+    public function ajaxPaginateFetch(Request $request)
+    {
+       if($request->ajax())
+       {
+          $array['employees'] = Employee::orderBy('id', 'asc')->paginate(3);
+          return view('index_child')->with($array)->render();
+       }
+    }
+
     public function salaryUpdate(Request $request)
     {
       $employee = Employee::find($request->id);
